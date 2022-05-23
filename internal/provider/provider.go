@@ -19,7 +19,7 @@ func init() {
 	schema.SchemaDescriptionBuilder = func(s *schema.Schema) string {
 		desc := s.Description
 		if s.Default != nil {
-			desc += fmt.Sprintf(" (Defaults to `%v`).", s.Default)
+			desc += fmt.Sprintf(" Defaults to `%v`.", s.Default)
 		}
 		return strings.TrimSpace(desc)
 	}
@@ -38,20 +38,18 @@ func New(params *Params) *schema.Provider {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Default:     "https://repo1.maven.org/maven2",
-				Description: "URL of the maven repository",
+				Description: "URL of the maven repository.",
 			},
 			"username": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Default:     "",
-				Description: "Username to authenticate against the private maven repository",
+				Description: "Username to authenticate against the private maven repository.",
 			},
 			"password": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Sensitive:   true,
-				Default:     "",
-				Description: "Password to authenticate against the private maven repository",
+				Description: "Password to authenticate against the private maven repository.",
 			},
 		},
 		ResourcesMap: map[string]*schema.Resource{},
