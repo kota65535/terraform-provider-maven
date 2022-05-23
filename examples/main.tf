@@ -1,4 +1,4 @@
-variable github_token {
+variable "github_token" {
   type = string
 }
 
@@ -13,7 +13,7 @@ terraform {
 }
 
 // Download apache-commons package from maven central
-data "maven_package" "commons" {
+data "maven_artifact" "commons" {
   group_id    = "org.apache.commons"
   artifact_id = "commons-text"
   version     = "1.9"
@@ -28,7 +28,7 @@ provider "maven" {
 }
 
 // Download a package from private maven repository
-data "maven_package" "private" {
+data "maven_artifact" "private" {
   group_id    = "com.kota65535"
   artifact_id = "hello-maven"
   version     = "0.0.20"
@@ -38,15 +38,15 @@ data "maven_package" "private" {
 }
 
 // Extract files from the package
-resource null_resource unzip_package {
+resource "null_resource" "unzip_package" {
   triggers = {
-    hash = filebase64sha256(data.maven_package.commons.output_path)
+    hash = filebase64sha256(data.maven_artifact.commons.output_path)
   }
   provisioner "local-exec" {
-    command = "unzip ${data.maven_package.commons.output_path} -d ${path.root}/.terraform/tmp"
+    command = "unzip ${data.maven_artifact.commons.output_path} -d ${path.root}/.terraform/tmp"
   }
 }
 
-output files {
+output "files" {
   value = fileset("${path.root}/.terraform/tmp", "**")
 }

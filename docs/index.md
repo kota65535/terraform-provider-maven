@@ -17,6 +17,6 @@ description: |-
 
 ### Optional
 
-- `password` (String, Sensitive)
-- `repository_url` (String)
-- `username` (String)
+- `password` (String, Sensitive) Password to authenticate against the private maven repository
+- `repository_url` (String) URL of the maven repository
+- `username` (String) Username to authenticate against the private maven repository

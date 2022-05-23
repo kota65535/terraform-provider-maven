@@ -69,7 +69,7 @@ func (a *Artifact) FileName() string {
 	}
 }
 
-func DownloadMavenPackage(repository *Repository, artifact *Artifact, outputDir string) (string, error) {
+func DownloadMavenArtifact(repository *Repository, artifact *Artifact, outputDir string) (string, error) {
 
 	url := artifact.Url(repository)
 	resp, err := httpGet(artifact.Url(repository), repository.Username, repository.Password)

@@ -8,23 +8,23 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
-func TestAccDataSourceMavenPackageBasic(t *testing.T) {
+func TestAccDataSourceMavenArtifactBasic(t *testing.T) {
 	resource.UnitTest(t, resource.TestCase{
 		ProviderFactories: providerFactories,
 		Steps: []resource.TestStep{
 			{
-				Config: testAccDataSourceMavenPackageBasicConfig(),
+				Config: testAccDataSourceMavenArtifactBasicConfig(),
 				Check: resource.ComposeTestCheckFunc(
-					testAccCheckDataSourceExists("data.maven_package.basic"),
+					testAccCheckDataSourceExists("data.maven_artifact.basic"),
 				),
 			},
 		},
 	})
 }
 
-func testAccDataSourceMavenPackageBasicConfig() string {
+func testAccDataSourceMavenArtifactBasicConfig() string {
 	return fmt.Sprintf(`
-	data "maven_package" "basic" {
+	data "maven_artifact" "basic" {
 		group_id    = "org.apache.commons"
 		artifact_id = "commons-text"
 		version     = "1.9"

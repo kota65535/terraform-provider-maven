@@ -7,67 +7,75 @@ import (
 	"os"
 )
 
-func dataSourceMavenPackage() *schema.Resource {
+func dataSourceMavenArtifact() *schema.Resource {
 	return &schema.Resource{
-		ReadContext: dataSourceMavenPackageRead,
+		ReadContext: dataSourceMavenArtifactRead,
 		Schema: map[string]*schema.Schema{
 			"group_id": {
-				Type:     schema.TypeString,
-				Required: true,
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: "Group ID",
 			},
 			"artifact_id": {
-				Type:     schema.TypeString,
-				Required: true,
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: "Artifact ID",
 			},
 			"version": {
-				Type:     schema.TypeString,
-				Required: true,
+				Type:        schema.TypeString,
+				Required:    true,
+				Description: "Version",
 			},
 			"classifier": {
-				Type:     schema.TypeString,
-				Optional: true,
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Classifier",
 			},
 			"extension": {
-				Type:     schema.TypeString,
-				Optional: true,
-				Default:  "jar",
+				Type:        schema.TypeString,
+				Optional:    true,
+				Default:     "jar",
+				Description: "Extension of the artifact file",
 			},
 			"output_dir": {
-				Type:     schema.TypeString,
-				Optional: true,
+				Type:        schema.TypeString,
+				Optional:    true,
+				Description: "Path of the directory where the artifact file is located",
 			},
 			"output_path": {
-				Type:     schema.TypeString,
-				Computed: true,
+				Type:        schema.TypeString,
+				Computed:    true,
+				Description: "Path of the artifact file",
 			},
 			"output_size": {
-				Type:     schema.TypeInt,
-				Computed: true,
-				ForceNew: true,
+				Type:        schema.TypeInt,
+				Computed:    true,
+				ForceNew:    true,
+				Description: "Size of the artifact file",
 			},
 			"output_sha": {
 				Type:        schema.TypeString,
 				Computed:    true,
 				ForceNew:    true,
-				Description: "SHA1 checksum of output file",
+				Description: "SHA1 checksum of the artifact file",
 			},
 			"output_base64sha256": {
 				Type:        schema.TypeString,
 				Computed:    true,
 				ForceNew:    true,
-				Description: "Base64 Encoded SHA256 checksum of output file",
+				Description: "Base64 Encoded SHA256 checksum of the artifact file",
 			},
 			"output_md5": {
 				Type:        schema.TypeString,
 				Computed:    true,
 				ForceNew:    true,
-				Description: "MD5 of output file",
+				Description: "MD5 of the artifact file",
 			},
 		},
 	}
 }
 
-func dataSourceMavenPackageRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
+func dataSourceMavenArtifactRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 
 	groupId := d.Get("group_id").(string)
 	artifactId := d.Get("artifact_id").(string)
@@ -79,7 +87,7 @@ func dataSourceMavenPackageRead(ctx context.Context, d *schema.ResourceData, m i
 	artifact := NewArtifact(groupId, artifactId, version, classifier, extension)
 	repository := m.(*Repository)
 
-	filePath, err := DownloadMavenPackage(repository, artifact, outputDir)
+	filePath, err := DownloadMavenArtifact(repository, artifact, outputDir)
 	if err != nil {
 		return diag.FromErr(err)
 	}
