@@ -3,12 +3,12 @@
 page_title: "maven_artifact Data Source - terraform-provider-maven"
 subcategory: ""
 description: |-
-  
+  Download an artifact from the maven repository.
 ---
 
 # maven_artifact (Data Source)
 
-
+Download an artifact from the maven repository.
 
 
 
@@ -24,7 +24,7 @@ description: |-
 ### Optional
 
 - `classifier` (String) Classifier
-- `extension` (String) Extension of the artifact file
+- `extension` (String) Extension of the artifact file (Defaults to `jar`).
 - `output_dir` (String) Path of the directory where the artifact file is located
 
 ### Read-Only

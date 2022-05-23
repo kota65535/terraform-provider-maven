@@ -9,6 +9,7 @@ import (
 
 func dataSourceMavenArtifact() *schema.Resource {
 	return &schema.Resource{
+		Description: "Download an artifact from the maven repository.",
 		ReadContext: dataSourceMavenArtifactRead,
 		Schema: map[string]*schema.Schema{
 			"group_id": {
