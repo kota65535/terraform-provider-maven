@@ -7,6 +7,9 @@ import (
 )
 
 func TestDownloadFromMavenCentral(t *testing.T) {
+	td, cwd := setup(t)
+	defer tearDown(t, td, cwd)
+
 	r := NewRepository("", "", "")
 	a := NewArtifact("org.apache.commons", "commons-text", "1.9", "", "")
 	path, err := DownloadMavenArtifact(r, a, "")
@@ -17,16 +20,22 @@ func TestDownloadFromMavenCentral(t *testing.T) {
 }
 
 func TestDownloadWithDir(t *testing.T) {
+	td, cwd := setup(t)
+	defer tearDown(t, td, cwd)
+
 	r := NewRepository("", "", "")
-	a := NewArtifact("org.apache.commons", "commons-text", "1.9", "", "")
+	a := NewArtifact("org.apache.commons", "commons-text", "1.9", "javadoc", "")
 	path, err := DownloadMavenArtifact(r, a, "out")
-	assert.Equal(t, "out/commons-text-1.9.jar", path)
+	assert.Equal(t, "out/commons-text-1.9-javadoc.jar", path)
 	assert.Nil(t, err)
 	fi, err := os.Stat(path)
 	assert.Positive(t, fi.Size())
 }
 
 func TestDownloadNotFound(t *testing.T) {
+	td, cwd := setup(t)
+	defer tearDown(t, td, cwd)
+
 	r := NewRepository("", "", "")
 	a := NewArtifact("invalid.group", "commons-text", "1.9", "", "")
 	path, err := DownloadMavenArtifact(r, a, "")
@@ -35,6 +44,9 @@ func TestDownloadNotFound(t *testing.T) {
 }
 
 func TestDownloadFromPrivateRepository(t *testing.T) {
+	td, cwd := setup(t)
+	defer tearDown(t, td, cwd)
+
 	r := NewRepository("", "", "")
 	a := NewArtifact("invalid.group", "commons-text", "1.9", "", "")
 	path, err := DownloadMavenArtifact(r, a, "")
