@@ -9,7 +9,7 @@ import (
 )
 
 func TestAccDataSourceMavenArtifactBasic(t *testing.T) {
-	resource.UnitTest(t, resource.TestCase{
+	resource.Test(t, resource.TestCase{
 		ProviderFactories: providerFactories,
 		Steps: []resource.TestStep{
 			{
