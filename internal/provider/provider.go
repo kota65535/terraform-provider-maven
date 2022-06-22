@@ -65,9 +65,15 @@ func configure(params *Params) func(context.Context, *schema.ResourceData) (inte
 		if params == nil {
 			params = &Params{}
 		}
-		params.RepositoryUrl = d.Get("repository_url").(string)
-		params.Username = d.Get("username").(string)
-		params.Password = d.Get("password").(string)
+		if params.RepositoryUrl == "" {
+			params.RepositoryUrl = d.Get("repository_url").(string)
+		}
+		if params.Username == "" {
+			params.Username = d.Get("username").(string)
+		}
+		if params.Password == "" {
+			params.Password = d.Get("password").(string)
+		}
 		return NewRepository(params.RepositoryUrl, params.Username, params.Password), nil
 	}
 }

@@ -10,7 +10,7 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/terraform"
 )
 
-func TestAccDataSourceMavenArtifactMinimal(t *testing.T) {
+func TestAccDataSourceMavenArtifact(t *testing.T) {
 	td, cwd := setup(t)
 	defer tearDown(t, td, cwd)
 
@@ -35,6 +35,24 @@ func TestAccDataSourceMavenArtifactMinimal(t *testing.T) {
 	})
 }
 
+func TestAccDataSourceMavenArtifactSnapshot(t *testing.T) {
+	td, cwd := setup(t)
+	defer tearDown(t, td, cwd)
+
+	resource.Test(t, resource.TestCase{
+		ProviderFactories: providerFactoriesSnapshot,
+		Steps: []resource.TestStep{
+			{
+				Config: testAccDataSourceMavenArtifactSnapshotConfig(),
+				Check: resource.ComposeTestCheckFunc(
+					testAccFilesExists("commons-text-1.10.0-SNAPSHOT.jar", "."),
+					resource.TestCheckResourceAttr("data.maven_artifact.snapshot", "output_sha", "cc502c458e0970d402848daf9d9fbaeb07fd0504"),
+				),
+			},
+		},
+	})
+}
+
 func testAccDataSourceMavenArtifactMinimalConfig() string {
 	return fmt.Sprintf(`
 	data "maven_artifact" "minimal" {
@@ -53,6 +71,16 @@ func testAccDataSourceMavenArtifactAllConfig() string {
 		version     = "1.9"
         classifier  = "javadoc"
         output_dir  = "out"
+	}
+	`)
+}
+
+func testAccDataSourceMavenArtifactSnapshotConfig() string {
+	return fmt.Sprintf(`
+	data "maven_artifact" "snapshot" {
+		group_id    = "org.apache.commons"
+		artifact_id = "commons-text"
+		version     = "1.10.0-SNAPSHOT"
 	}
 	`)
 }
