@@ -30,7 +30,7 @@ type Artifact struct {
 	Extension  string
 }
 
-type MavenMetadata struct {
+type Metadata struct {
 	Timestamp   string `xml:"versioning>snapshot>timestamp"`
 	BuildNumber string `xml:"versioning>snapshot>buildNumber"`
 }
@@ -62,23 +62,23 @@ func NewArtifact(groupId, artifactId, version, classifier, extension string) *Ar
 	}
 }
 
-func (a *Artifact) ParentUrl(r *Repository) string {
-	return r.Url + a.Path()
+func (a *Artifact) MetadataUrl(r *Repository) string {
+	return r.Url + a.Path() + "maven-metadata.xml"
 }
 
-func (a *Artifact) Url(r *Repository, snapshotVersion string) string {
-	return a.ParentUrl(r) + a.FileName(snapshotVersion)
+func (a *Artifact) Url(r *Repository, m *Metadata) string {
+	return r.Url + a.Path() + a.FileName(m)
 }
 
 func (a *Artifact) Path() string {
 	return fmt.Sprintf("%s/%s/%s/", strings.Replace(a.GroupId, ".", "/", -1), a.ArtifactId, a.Version)
 }
 
-func (a *Artifact) FileName(snapshotVersion string) string {
+func (a *Artifact) FileName(m *Metadata) string {
 	version := a.Version
-	if snapshotVersion != "" {
+	if m != nil {
 		version = version[0 : len(version)-len(SnapshotVersionSuffix)]
-		version = fmt.Sprintf("%s-%s", version, snapshotVersion)
+		version = fmt.Sprintf("%s-%s", version, m.SnapshotVersion())
 	}
 	if a.Classifier != "" {
 		return fmt.Sprintf("%s-%s-%s.%s", a.ArtifactId, version, a.Classifier, a.Extension)
@@ -87,11 +87,19 @@ func (a *Artifact) FileName(snapshotVersion string) string {
 	}
 }
 
+func (r *Artifact) IsSnapshot() bool {
+	return strings.HasSuffix(r.Version, SnapshotVersionSuffix)
+}
+
+func (r *Metadata) SnapshotVersion() string {
+	return fmt.Sprintf("%s-%s", r.Timestamp, r.BuildNumber)
+}
+
 func DownloadMavenArtifact(repository *Repository, artifact *Artifact, outputDir string) (string, error) {
 
-	snapshotVersion := ""
-	if strings.HasSuffix(artifact.Version, SnapshotVersionSuffix) {
-		metadataUrl := artifact.ParentUrl(repository) + "maven-metadata.xml"
+	var metadata *Metadata = nil
+	if artifact.IsSnapshot() {
+		metadataUrl := artifact.MetadataUrl(repository)
 		resp, err := httpGet(metadataUrl, repository.Username, repository.Password)
 		if err != nil {
 			return "", err
@@ -104,14 +112,12 @@ func DownloadMavenArtifact(repository *Repository, artifact *Artifact, outputDir
 		if err != nil {
 			return "", err
 		}
-		metadata := MavenMetadata{}
 		err = xml.Unmarshal(body, &metadata)
 		if err != nil {
 			return "", nil
 		}
-		snapshotVersion = fmt.Sprintf("%s-%s", metadata.Timestamp, metadata.BuildNumber)
 	}
-	url := artifact.Url(repository, snapshotVersion)
+	url := artifact.Url(repository, metadata)
 	resp, err := httpGet(url, repository.Username, repository.Password)
 	if err != nil {
 		return "", err
@@ -132,7 +138,7 @@ func DownloadMavenArtifact(repository *Repository, artifact *Artifact, outputDir
 		}
 	}
 
-	filepath := path.Join(outputDir, artifact.FileName(""))
+	filepath := path.Join(outputDir, artifact.FileName(nil))
 
 	out, err := os.Create(filepath)
 	if err != nil {
