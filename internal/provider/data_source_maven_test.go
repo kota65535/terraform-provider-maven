@@ -40,13 +40,13 @@ func TestAccDataSourceMavenArtifactSnapshot(t *testing.T) {
 	defer tearDown(t, td, cwd)
 
 	resource.Test(t, resource.TestCase{
-		ProviderFactories: providerFactoriesSnapshot,
+		ProviderFactories: providerFactories,
 		Steps: []resource.TestStep{
 			{
 				Config: testAccDataSourceMavenArtifactSnapshotConfig(),
 				Check: resource.ComposeTestCheckFunc(
 					testAccFilesExists("commons-text-1.10.0-SNAPSHOT.jar", "."),
-					resource.TestCheckResourceAttr("data.maven_artifact.snapshot", "output_sha", "cc502c458e0970d402848daf9d9fbaeb07fd0504"),
+					resource.TestCheckResourceAttrSet("data.maven_artifact.snapshot", "output_sha"),
 				),
 			},
 		},
@@ -77,6 +77,10 @@ func testAccDataSourceMavenArtifactAllConfig() string {
 
 func testAccDataSourceMavenArtifactSnapshotConfig() string {
 	return fmt.Sprintf(`
+    provider "maven" {
+		repository_url = "https://repository.apache.org/content/repositories/snapshots"
+    }
+
 	data "maven_artifact" "snapshot" {
 		group_id    = "org.apache.commons"
 		artifact_id = "commons-text"

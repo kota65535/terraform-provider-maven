@@ -25,13 +25,7 @@ func init() {
 	}
 }
 
-type Params struct {
-	RepositoryUrl string
-	Username      string
-	Password      string
-}
-
-func New(params *Params) *schema.Provider {
+func New() *schema.Provider {
 	return &schema.Provider{
 		Schema: map[string]*schema.Schema{
 			"repository_url": {
@@ -56,24 +50,15 @@ func New(params *Params) *schema.Provider {
 		DataSourcesMap: map[string]*schema.Resource{
 			"maven_artifact": dataSourceMavenArtifact(),
 		},
-		ConfigureContextFunc: configure(params),
+		ConfigureContextFunc: configure(),
 	}
 }
 
-func configure(params *Params) func(context.Context, *schema.ResourceData) (interface{}, diag.Diagnostics) {
+func configure() func(context.Context, *schema.ResourceData) (interface{}, diag.Diagnostics) {
 	return func(cxt context.Context, d *schema.ResourceData) (interface{}, diag.Diagnostics) {
-		if params == nil {
-			params = &Params{}
-		}
-		if params.RepositoryUrl == "" {
-			params.RepositoryUrl = d.Get("repository_url").(string)
-		}
-		if params.Username == "" {
-			params.Username = d.Get("username").(string)
-		}
-		if params.Password == "" {
-			params.Password = d.Get("password").(string)
-		}
-		return NewRepository(params.RepositoryUrl, params.Username, params.Password), nil
+		repositoryUrl := d.Get("repository_url").(string)
+		username := d.Get("username").(string)
+		password := d.Get("password").(string)
+		return NewRepository(repositoryUrl, username, password), nil
 	}
 }

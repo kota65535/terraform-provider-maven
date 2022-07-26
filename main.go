@@ -23,7 +23,7 @@ var (
 	version string = "dev"
 
 	// goreleaser can also pass the specific commit if you want
-	// commit  string = ""
+	commit string = ""
 )
 
 func main() {
@@ -39,7 +39,7 @@ func main() {
 		ProviderAddr: "registry.terraform.io/kota65535/maven",
 
 		ProviderFunc: func() *schema.Provider {
-			return provider.New(nil)
+			return provider.New()
 		},
 	}
 
