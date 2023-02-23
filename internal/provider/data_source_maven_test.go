@@ -45,7 +45,7 @@ func TestAccDataSourceMavenArtifactSnapshot(t *testing.T) {
 			{
 				Config: testAccDataSourceMavenArtifactSnapshotConfig(),
 				Check: resource.ComposeTestCheckFunc(
-					testAccFilesExists("commons-text-1.10.0-SNAPSHOT.jar", "."),
+					testAccFilesExists("commons-text-1.10.1-SNAPSHOT.jar", "."),
 					resource.TestCheckResourceAttrSet("data.maven_artifact.snapshot", "output_sha"),
 				),
 			},
@@ -84,7 +84,7 @@ func testAccDataSourceMavenArtifactSnapshotConfig() string {
 	data "maven_artifact" "snapshot" {
 		group_id    = "org.apache.commons"
 		artifact_id = "commons-text"
-		version     = "1.10.0-SNAPSHOT"
+		version     = "1.10.1-SNAPSHOT"
 	}
 	`)
 }

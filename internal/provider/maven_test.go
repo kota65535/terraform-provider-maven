@@ -59,9 +59,9 @@ func TestDownloadSnapshot(t *testing.T) {
 	defer tearDown(t, td, cwd)
 
 	r := NewRepository("https://repository.apache.org/content/repositories/snapshots", "", "")
-	a := NewArtifact("org.apache.commons", "commons-text", "1.10.0-SNAPSHOT", "", "")
+	a := NewArtifact("org.apache.commons", "commons-text", "1.10.1-SNAPSHOT", "", "")
 	path, err := DownloadMavenArtifact(r, a, "")
-	assert.Equal(t, "commons-text-1.10.0-SNAPSHOT.jar", path)
+	assert.Equal(t, "commons-text-1.10.1-SNAPSHOT.jar", path)
 	assert.Nil(t, err)
 	fi, err := os.Stat(path)
 	assert.Positive(t, fi.Size())
