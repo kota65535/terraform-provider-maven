@@ -8,4 +8,3 @@ provider "maven" {
   password       = "password"
   alias          = "private"
 }
-

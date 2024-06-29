@@ -69,17 +69,17 @@ func testAccDataSourceMavenArtifactAllConfig() string {
 		group_id    = "org.apache.commons"
 		artifact_id = "commons-text"
 		version     = "1.9"
-        classifier  = "javadoc"
-        output_dir  = "out"
+		classifier  = "javadoc"
+		output_dir  = "out"
 	}
 	`)
 }
 
 func testAccDataSourceMavenArtifactSnapshotConfig() string {
 	return fmt.Sprintf(`
-    provider "maven" {
+	provider "maven" {
 		repository_url = "https://repository.apache.org/content/repositories/snapshots"
-    }
+	}
 
 	data "maven_artifact" "snapshot" {
 		group_id    = "org.apache.commons"
