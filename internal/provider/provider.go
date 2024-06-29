@@ -31,19 +31,21 @@ func New() *schema.Provider {
 			"repository_url": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Default:     "https://repo1.maven.org/maven2",
 				Description: "URL of the maven repository.",
+				DefaultFunc: schema.EnvDefaultFunc("MAVEN_REPOSITORY_URL", "https://repo1.maven.org/maven2"),
 			},
 			"username": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Description: "Username to authenticate against the private maven repository.",
+				DefaultFunc: schema.EnvDefaultFunc("MAVEN_USERNAME", ""),
 			},
 			"password": {
 				Type:        schema.TypeString,
 				Optional:    true,
 				Sensitive:   true,
 				Description: "Password to authenticate against the private maven repository.",
+				DefaultFunc: schema.EnvDefaultFunc("MAVEN_PASSWORD", ""),
 			},
 		},
 		ResourcesMap: map[string]*schema.Resource{},
