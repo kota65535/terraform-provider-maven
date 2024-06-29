@@ -45,5 +45,3 @@ data "maven_artifact" "commons" {
 - `output_path` (String) Path of the artifact file.
 - `output_sha` (String) SHA1 checksum of the artifact file.
 - `output_size` (Number) Size of the artifact file.
-
-
