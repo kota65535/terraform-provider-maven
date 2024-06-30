@@ -30,5 +30,15 @@ provider "maven" {
 ### Optional
 
 - `password` (String, Sensitive) Password to authenticate against the private maven repository.
-- `repository_url` (String) URL of the maven repository.
+- `repository_url` (String) URL of the maven repository. Defaults to `https://repo1.maven.org/maven2`.
 - `username` (String) Username to authenticate against the private maven repository.
+
+## Environment Variables
+
+The following configuration attributes can be passed via environment variables:
+
+| Argument         | Environment variable   |
+|------------------|------------------------|
+| `password`       | `MAVEN_PASSWORD`       |
+| `repository_url` | `MAVEN_REPOSITORY_URL` |
+| `username`       | `MAVEN_USERNAME`       |
