@@ -31,7 +31,7 @@ func New() *schema.Provider {
 			"repository_url": {
 				Type:        schema.TypeString,
 				Optional:    true,
-				Description: "URL of the maven repository.",
+				Description: "URL of the maven repository. Defaults to `https://repo1.maven.org/maven2`.",
 				DefaultFunc: schema.EnvDefaultFunc("MAVEN_REPOSITORY_URL", "https://repo1.maven.org/maven2"),
 			},
 			"username": {
